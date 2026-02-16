@@ -1,19 +1,21 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Img,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
 
 /**
- * Professional portrait placeholder on the right side.
+ * Professional portrait on the right side.
  * Appears at ~1.3s with explosive spring entrance,
  * slight rotation overshoot and scale bounce.
  *
- * Replace the placeholder with an actual image via:
- *   <Img src={staticFile("sahil-portrait.png")} />
+ * To use a real photo: place it at public/sahil-portrait.png
+ * and change the src below.
  */
 export const SubjectPlaceholder: React.FC = () => {
   const frame = useCurrentFrame();
@@ -115,54 +117,18 @@ export const SubjectPlaceholder: React.FC = () => {
           }}
         />
 
-        {/* Portrait placeholder — replace with <Img> for real photo */}
-        <div
+        {/* Portrait image */}
+        <Img
+          src={staticFile("sahil-silhouette.svg")}
           style={{
             width: "100%",
             height: "100%",
             borderRadius: 12,
-            background:
-              "linear-gradient(135deg, rgba(118,185,0,0.15) 0%, rgba(200,220,200,0.3) 50%, rgba(118,185,0,0.1) 100%)",
-            border: "2px solid rgba(118, 185, 0, 0.25)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            overflow: "hidden",
+            objectFit: "cover",
             boxShadow:
               "0 20px 60px rgba(0,0,0,0.1), 0 0 30px rgba(118, 185, 0, 0.15)",
           }}
-        >
-          {/* Silhouette icon */}
-          <div
-            style={{
-              width: 120,
-              height: 120,
-              borderRadius: "50%",
-              backgroundColor: "rgba(118, 185, 0, 0.2)",
-              marginBottom: 20,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: 50,
-            }}
-          >
-            👤
-          </div>
-          <div
-            style={{
-              fontFamily: "monospace",
-              fontSize: 13,
-              color: "rgba(118, 185, 0, 0.6)",
-              textAlign: "center",
-              padding: "0 20px",
-            }}
-          >
-            Place portrait image at
-            <br />
-            public/sahil-portrait.png
-          </div>
-        </div>
+        />
       </div>
     </AbsoluteFill>
   );

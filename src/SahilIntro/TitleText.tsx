@@ -6,6 +6,9 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import { loadFont } from "@remotion/google-fonts/Knewave";
+
+const { fontFamily } = loadFont();
 
 /**
  * "SAHIL GUPTA" massive centered title with:
@@ -119,7 +122,7 @@ export const TitleText: React.FC = () => {
         style={{
           fontSize: 110,
           fontWeight: 900,
-          fontFamily: "'Knewave', cursive, sans-serif",
+          fontFamily: fontFamily,
           color: "#76B900",
           textAlign: "center",
           transform: `scale(${scale})`,

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 480" fill="none">
+  <!-- Professional male silhouette with tech-founder vibe -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#76B900" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#76B900" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="bodyGrad" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#2d2d2d"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+    <radialGradient id="rimLight" cx="0.8" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="#76B900" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#76B900" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background fill -->
+  <rect width="380" height="480" rx="12" fill="url(#bgGrad)"/>
+
+  <!-- Body / Shoulders (smart casual blazer) -->
+  <path d="M70 480 Q70 360 120 330 Q155 310 190 305 Q225 310 260 330 Q310 360 310 480 Z" fill="url(#bodyGrad)"/>
+
+  <!-- Collar / V-neck -->
+  <path d="M160 320 L190 350 L220 320" stroke="#3a3a3a" stroke-width="2" fill="none"/>
+
+  <!-- Neck -->
+  <rect x="170" y="265" width="40" height="45" rx="8" fill="#c4956a"/>
+
+  <!-- Head -->
+  <ellipse cx="190" cy="220" rx="65" ry="75" fill="#c4956a"/>
+
+  <!-- Hair -->
+  <path d="M125 200 Q125 150 160 135 Q180 128 200 130 Q235 135 250 155 Q260 170 255 200 Q250 175 235 160 Q215 145 190 148 Q160 150 145 170 Q135 185 125 200 Z" fill="#1a1a1a"/>
+
+  <!-- Eyes -->
+  <ellipse cx="168" cy="215" rx="8" ry="5" fill="#1a1a1a"/>
+  <ellipse cx="212" cy="215" rx="8" ry="5" fill="#1a1a1a"/>
+
+  <!-- Eyebrows -->
+  <path d="M155 205 Q168 198 180 203" stroke="#1a1a1a" stroke-width="2.5" fill="none"/>
+  <path d="M200 203 Q212 198 225 205" stroke="#1a1a1a" stroke-width="2.5" fill="none"/>
+
+  <!-- Nose -->
+  <path d="M190 220 L187 238 Q190 242 193 238 Z" fill="#b8896a" opacity="0.6"/>
+
+  <!-- Confident smile -->
+  <path d="M175 252 Q190 262 205 252" stroke="#a07860" stroke-width="2" fill="none"/>
+
+  <!-- Ears -->
+  <ellipse cx="125" cy="225" rx="10" ry="15" fill="#c4956a"/>
+  <ellipse cx="255" cy="225" rx="10" ry="15" fill="#c4956a"/>
+
+  <!-- Green rim light effect -->
+  <ellipse cx="190" cy="240" rx="100" ry="130" fill="url(#rimLight)"/>
+
+  <!-- Subtle green rim on right edge -->
+  <path d="M250 160 Q270 200 265 260 Q260 300 255 320" stroke="#76B900" stroke-width="1.5" fill="none" opacity="0.4"/>
+</svg>
