@@ -9,124 +9,80 @@ import {
   useVideoConfig,
 } from "remotion";
 
-/**
- * Professional portrait on the right side.
- * Appears at ~1.3s with explosive spring entrance,
- * slight rotation overshoot and scale bounce.
- *
- * To use a real photo: place it at public/sahil-portrait.png
- * and change the src below.
- */
 export const SubjectPlaceholder: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const enterFrame = 39; // ~1.3s at 30fps
+  const enterFrame = 50;
 
-  // Explosive spring entrance
+  // Scale bounce entrance
   const scaleProgress = spring({
     frame: frame - enterFrame,
     fps,
-    config: { damping: 10, stiffness: 120, mass: 0.5 },
+    config: { damping: 12, stiffness: 100, mass: 0.6 },
   });
-  const scale = interpolate(scaleProgress, [0, 1], [0, 1]);
+  const scale = interpolate(scaleProgress, [0, 1], [0.5, 1]);
 
-  // Rotation overshoot
-  const rotationProgress = spring({
-    frame: frame - enterFrame,
-    fps,
-    config: { damping: 8, stiffness: 80, mass: 0.4 },
-  });
-  const rotation = interpolate(rotationProgress, [0, 1], [15, 0]);
-
-  // Slide in from right
+  // Slide up
   const slideProgress = spring({
     frame: frame - enterFrame,
     fps,
     config: { damping: 14, stiffness: 70 },
   });
-  const translateX = interpolate(slideProgress, [0, 1], [300, 0]);
+  const translateY = interpolate(slideProgress, [0, 1], [100, 0]);
 
-  const opacity = interpolate(frame, [enterFrame, enterFrame + 8], [0, 1], {
+  const opacity = interpolate(frame, [enterFrame, enterFrame + 10], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // Corner brackets around subject
-  const bracketProgress = spring({
-    frame: frame - enterFrame - 10,
-    fps,
-    config: { damping: 15, stiffness: 80 },
-  });
-  const bracketOpacity = interpolate(bracketProgress, [0, 1], [0, 0.6]);
-
-  const bracketStyle: React.CSSProperties = {
-    position: "absolute",
-    width: 25,
-    height: 25,
-    borderColor: "#76B900",
-    borderStyle: "solid",
-    opacity: bracketOpacity,
-  };
+  // Green glow ring pulse
+  const glowPhase = Math.max(0, frame - enterFrame - 15);
+  const glowIntensity = interpolate(
+    Math.sin(glowPhase * 0.06),
+    [-1, 1],
+    [0.3, 0.7],
+  );
 
   return (
-    <AbsoluteFill>
+    <AbsoluteFill
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        top: -130,
+      }}
+    >
       <div
         style={{
-          position: "absolute",
-          right: 40,
-          top: 350,
-          width: 380,
-          height: 480,
           opacity,
-          transform: `translateX(${translateX}px) scale(${scale}) rotate(${rotation}deg)`,
-          transformOrigin: "center center",
+          transform: `translateY(${translateY}px) scale(${scale})`,
+          position: "relative",
         }}
       >
-        {/* Corner brackets */}
+        {/* Glow ring behind portrait */}
         <div
           style={{
-            ...bracketStyle,
-            top: -15,
-            left: -15,
-            borderWidth: "2px 0 0 2px",
-          }}
-        />
-        <div
-          style={{
-            ...bracketStyle,
-            top: -15,
-            right: -15,
-            borderWidth: "2px 2px 0 0",
-          }}
-        />
-        <div
-          style={{
-            ...bracketStyle,
-            bottom: -15,
-            left: -15,
-            borderWidth: "0 0 2px 2px",
-          }}
-        />
-        <div
-          style={{
-            ...bracketStyle,
-            bottom: -15,
-            right: -15,
-            borderWidth: "0 2px 2px 0",
+            position: "absolute",
+            top: -20,
+            left: -20,
+            right: -20,
+            bottom: -20,
+            borderRadius: "50%",
+            border: `2px solid rgba(118, 185, 0, ${glowIntensity})`,
+            boxShadow: `0 0 30px rgba(118, 185, 0, ${glowIntensity * 0.4}), inset 0 0 30px rgba(118, 185, 0, ${glowIntensity * 0.1})`,
           }}
         />
 
-        {/* Portrait image */}
         <Img
           src={staticFile("sahil-silhouette.svg")}
           style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: 12,
+            width: 280,
+            height: 280,
+            borderRadius: "50%",
             objectFit: "cover",
+            border: "3px solid rgba(118, 185, 0, 0.5)",
             boxShadow:
-              "0 20px 60px rgba(0,0,0,0.1), 0 0 30px rgba(118, 185, 0, 0.15)",
+              "0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(118, 185, 0, 0.2)",
           }}
         />
       </div>

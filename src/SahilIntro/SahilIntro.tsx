@@ -1,55 +1,96 @@
 import React from "react";
-import { AbsoluteFill, Sequence } from "remotion";
+import { AbsoluteFill, Sequence, interpolate, useCurrentFrame } from "remotion";
 import { Background } from "./Background";
 import { TechRings } from "./TechRings";
 import { TitleText } from "./TitleText";
 import { SubjectPlaceholder } from "./SubjectPlaceholder";
-import { HudPanel } from "./HudPanel";
+import { SkillsShowcase } from "./SkillsShowcase";
 import { ScannerLine } from "./ScannerLine";
 import { GlitchEffect } from "./GlitchEffect";
 
 /**
- * Main composition: Cinematic 9:16 portrait tech-corporate intro
- * for "SAHIL GUPTA" — Shopify Expert.
+ * Redesigned cinematic 9:16 portrait intro for "SAHIL GUPTA"
+ * 1080x1920 @ 30fps, ~14 seconds (420 frames)
  *
- * 1080x1920 @ 30fps, ~7 seconds (210 frames)
- *
- * Layer order (back to front):
- *  1. Background (white + radial texture + green glow + data streams + particles)
- *  2. Tech rings (rotating dashed neon circles)
- *  3. Title text ("SAHIL GUPTA" with pop-in + corner brackets)
- *  4. Subject portrait (spring entrance from right at 1.3s)
- *  5. HUD panel (glassmorphism, slides from left at 1.5s)
- *  6. Scanner line (vertical green sweep)
- *  7. Glitch effect wrapper (occasional 3-frame distortion)
+ * Scene flow:
+ *  0-100:   Name entrance (SAHIL from left, GUPTA from right) + portrait
+ *  100-350: Skills showcase — each skill slides in with its own transition
+ *  350-420: Closing — everything fades, name returns center
  */
 export const SahilIntro: React.FC = () => {
+  const frame = useCurrentFrame();
+
+  // Fade to black at the very end
+  const endFade = interpolate(frame, [400, 420], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
   return (
-    <AbsoluteFill style={{ backgroundColor: "#f8f8f8" }}>
-      {/* Layer 1: Background */}
+    <AbsoluteFill style={{ backgroundColor: "#0a0a0a" }}>
+      {/* Layer 1: Background (always visible) */}
       <Background />
 
-      {/* Layer 2: Tech rings — appear after 0.6s */}
-      <Sequence from={18}>
+      {/* Layer 2: Scanner line (subtle, always running) */}
+      <ScannerLine />
+
+      {/* Layer 3: Tech rings around portrait area */}
+      <Sequence from={10}>
         <TechRings />
       </Sequence>
 
-      {/* Layer 3–6 wrapped in glitch effect */}
+      {/* Glitch wraps the main content */}
       <GlitchEffect>
-        {/* Layer 3: Title text — immediate entrance */}
-        <Sequence from={5}>
+        {/* Layer 4: Title text — immediate entrance */}
+        <Sequence from={0}>
           <TitleText />
         </Sequence>
 
-        {/* Layer 4: Subject portrait — enters at ~1.3s */}
+        {/* Layer 5: Portrait — enters shortly after name */}
         <SubjectPlaceholder />
 
-        {/* Layer 5: HUD panel — slides in at ~1.5s */}
-        <HudPanel />
+        {/* Layer 6: Skills showcase — appears after intro settles */}
+        <SkillsShowcase />
       </GlitchEffect>
 
-      {/* Layer 6: Scanner line (not affected by glitch) */}
-      <ScannerLine />
+      {/* Closing title flash */}
+      {frame >= 360 && (
+        <AbsoluteFill
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            opacity: interpolate(frame, [360, 380, 410, 420], [0, 1, 1, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+          }}
+        >
+          <div
+            style={{
+              fontSize: 90,
+              fontWeight: 900,
+              color: "#76B900",
+              textAlign: "center",
+              letterSpacing: 6,
+              textShadow:
+                "0 0 30px rgba(118, 185, 0, 0.6), 0 0 60px rgba(118, 185, 0, 0.3)",
+              fontFamily: "'Knewave', cursive",
+            }}
+          >
+            SAHIL
+            <br />
+            GUPTA
+          </div>
+        </AbsoluteFill>
+      )}
+
+      {/* Final fade to black */}
+      <AbsoluteFill
+        style={{
+          backgroundColor: "#000",
+          opacity: endFade,
+        }}
+      />
     </AbsoluteFill>
   );
 };

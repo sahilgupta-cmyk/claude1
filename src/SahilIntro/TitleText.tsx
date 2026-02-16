@@ -10,58 +10,65 @@ import { loadFont } from "@remotion/google-fonts/Knewave";
 
 const { fontFamily } = loadFont();
 
-/**
- * "SAHIL GUPTA" massive centered title with:
- * - Pop-in scaling from 3x to 1x with bounce
- * - Blur fade-in
- * - Green glow aura
- * - Animated corner brackets
- */
 export const TitleText: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Pop-in scale: 3x -> 1x with spring bounce
-  const scaleProgress = spring({
-    frame,
+  // "SAHIL" flies in from left
+  const sahilSlide = spring({
+    frame: frame - 5,
     fps,
-    config: { damping: 12, stiffness: 100, mass: 0.6 },
+    config: { damping: 14, stiffness: 80, mass: 0.8 },
   });
-  const scale = interpolate(scaleProgress, [0, 1], [3, 1]);
-
-  // Opacity fade-in
-  const opacity = interpolate(frame, [0, 12], [0, 1], {
+  const sahilX = interpolate(sahilSlide, [0, 1], [-800, 0]);
+  const sahilOpacity = interpolate(sahilSlide, [0, 0.3], [0, 1], {
     extrapolateRight: "clamp",
   });
 
-  // Blur fade-in (sharp by frame 15)
-  const blur = interpolate(frame, [0, 15], [12, 0], {
+  // "GUPTA" flies in from right
+  const guptaSlide = spring({
+    frame: frame - 12,
+    fps,
+    config: { damping: 14, stiffness: 80, mass: 0.8 },
+  });
+  const guptaX = interpolate(guptaSlide, [0, 1], [800, 0]);
+  const guptaOpacity = interpolate(guptaSlide, [0, 0.3], [0, 1], {
     extrapolateRight: "clamp",
   });
 
-  // Glow intensity pulses subtly
-  const glowIntensity = interpolate(
-    Math.sin(frame * 0.06),
+  // Glow intensity
+  const glowSize = interpolate(
+    Math.sin(frame * 0.05),
     [-1, 1],
-    [15, 30],
+    [20, 40],
   );
 
-  // Corner brackets animation
-  const bracketProgress = spring({
-    frame: frame - 15,
+  // Underline wipe
+  const lineProgress = spring({
+    frame: frame - 25,
     fps,
-    config: { damping: 15, stiffness: 80 },
+    config: { damping: 20, stiffness: 60 },
   });
-  const bracketOpacity = interpolate(bracketProgress, [0, 1], [0, 0.7]);
-  const bracketOffset = interpolate(bracketProgress, [0, 1], [30, 0]);
+  const lineWidth = interpolate(lineProgress, [0, 1], [0, 600]);
 
-  const bracketStyle: React.CSSProperties = {
-    position: "absolute",
-    width: 30,
-    height: 30,
-    borderColor: "#76B900",
-    borderStyle: "solid",
-    opacity: bracketOpacity,
+  // Subtitle entrance
+  const subProgress = spring({
+    frame: frame - 35,
+    fps,
+    config: { damping: 18, stiffness: 70 },
+  });
+  const subOpacity = interpolate(subProgress, [0, 1], [0, 1]);
+  const subY = interpolate(subProgress, [0, 1], [30, 0]);
+
+  const nameStyle: React.CSSProperties = {
+    fontSize: 130,
+    fontWeight: 900,
+    fontFamily,
+    color: "#ffffff",
+    textAlign: "center",
+    letterSpacing: 8,
+    lineHeight: 1.1,
+    textShadow: `0 0 ${glowSize}px rgba(118, 185, 0, 0.5), 0 0 ${glowSize * 2}px rgba(118, 185, 0, 0.2)`,
   };
 
   return (
@@ -69,72 +76,57 @@ export const TitleText: React.FC = () => {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        top: -200,
+        top: -450,
       }}
     >
-      {/* Corner brackets around title area */}
+      {/* SAHIL */}
       <div
         style={{
-          position: "absolute",
-          width: 620,
-          height: 140,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <div
-          style={{
-            ...bracketStyle,
-            top: -bracketOffset,
-            left: -bracketOffset,
-            borderWidth: "3px 0 0 3px",
-          }}
-        />
-        <div
-          style={{
-            ...bracketStyle,
-            top: -bracketOffset,
-            right: -bracketOffset,
-            borderWidth: "3px 3px 0 0",
-          }}
-        />
-        <div
-          style={{
-            ...bracketStyle,
-            bottom: -bracketOffset,
-            left: -bracketOffset,
-            borderWidth: "0 0 3px 3px",
-          }}
-        />
-        <div
-          style={{
-            ...bracketStyle,
-            bottom: -bracketOffset,
-            right: -bracketOffset,
-            borderWidth: "0 3px 3px 0",
-          }}
-        />
-      </div>
-
-      {/* Main title */}
-      <div
-        style={{
-          fontSize: 110,
-          fontWeight: 900,
-          fontFamily: fontFamily,
-          color: "#76B900",
-          textAlign: "center",
-          transform: `scale(${scale})`,
-          opacity,
-          filter: `blur(${blur}px) drop-shadow(0 0 ${glowIntensity}px rgba(118, 185, 0, 0.6))`,
-          letterSpacing: 4,
-          lineHeight: 1.1,
+          ...nameStyle,
+          transform: `translateX(${sahilX}px)`,
+          opacity: sahilOpacity,
         }}
       >
         SAHIL
-        <br />
+      </div>
+
+      {/* GUPTA */}
+      <div
+        style={{
+          ...nameStyle,
+          transform: `translateX(${guptaX}px)`,
+          opacity: guptaOpacity,
+          color: "#76B900",
+        }}
+      >
         GUPTA
+      </div>
+
+      {/* Underline */}
+      <div
+        style={{
+          width: lineWidth,
+          height: 3,
+          backgroundColor: "#76B900",
+          marginTop: 20,
+          boxShadow: "0 0 15px rgba(118, 185, 0, 0.6)",
+        }}
+      />
+
+      {/* Subtitle */}
+      <div
+        style={{
+          marginTop: 25,
+          fontSize: 36,
+          fontFamily: "'Courier New', monospace",
+          color: "rgba(118, 185, 0, 0.9)",
+          letterSpacing: 6,
+          fontWeight: 600,
+          opacity: subOpacity,
+          transform: `translateY(${subY}px)`,
+        }}
+      >
+        SHOPIFY EXPERT
       </div>
     </AbsoluteFill>
   );

@@ -1,21 +1,18 @@
 import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 
-/**
- * Animated rotating dashed neon-green tech rings
- * spinning slowly with subtle blur depth.
- */
 const Ring: React.FC<{
   size: number;
   speed: number;
   dashLength: string;
   offset: number;
   blurAmount: number;
-}> = ({ size, speed, dashLength, offset, blurAmount }) => {
+  thickness: number;
+}> = ({ size, speed, dashLength, offset, blurAmount, thickness }) => {
   const frame = useCurrentFrame();
   const rotation = frame * speed + offset;
 
-  const opacity = interpolate(frame, [20, 40], [0, 0.4], {
+  const opacity = interpolate(frame, [10, 40], [0, 0.3], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -26,7 +23,7 @@ const Ring: React.FC<{
         position: "absolute",
         width: size,
         height: size,
-        border: `2px dashed rgba(118, 185, 0, 0.5)`,
+        border: `${thickness}px dashed rgba(118, 185, 0, 0.35)`,
         borderRadius: "50%",
         transform: `rotate(${rotation}deg)`,
         opacity,
@@ -43,13 +40,12 @@ export const TechRings: React.FC = () => {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        top: 100,
+        top: -130,
       }}
     >
-      <Ring size={500} speed={0.3} dashLength="10 20" offset={0} blurAmount={0} />
-      <Ring size={600} speed={-0.2} dashLength="15 25" offset={45} blurAmount={1} />
-      <Ring size={700} speed={0.15} dashLength="8 30" offset={90} blurAmount={2} />
-      <Ring size={400} speed={-0.4} dashLength="20 15" offset={135} blurAmount={0.5} />
+      <Ring size={340} speed={0.4} dashLength="10 20" offset={0} blurAmount={0} thickness={1} />
+      <Ring size={400} speed={-0.25} dashLength="15 25" offset={45} blurAmount={1} thickness={2} />
+      <Ring size={460} speed={0.18} dashLength="8 30" offset={90} blurAmount={2} thickness={1} />
     </AbsoluteFill>
   );
 };
